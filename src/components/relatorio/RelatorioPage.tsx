@@ -11,7 +11,7 @@ import { StatCard } from '@/components/ui/stat-card';
 import { DataTable, type Column } from '@/components/ui/data-table';
 import { toast } from 'sonner';
 import {
-  Download, Filter, Package,
+  Download, Filter, Package, ClipboardList,
   TrendingUp, AlertTriangle, BarChart3,
 } from 'lucide-react';
 import type { Produto } from '@/types';
@@ -21,6 +21,7 @@ export function RelatorioPage() {
   const [summary, setSummary] = useState({ totalProdutos: 0, totalItens: 0, abaixoMinimo: 0 });
   const [busca, setBusca] = useState('');
   const [filtroMinimo, setFiltroMinimo] = useState(false);
+  const [filtroProvidencia, setFiltroProvidencia] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -33,6 +34,7 @@ export function RelatorioPage() {
       const data = await produtosService.list({
         nome: busca || undefined,
         estoqueminimo: filtroMinimo,
+        providencia: filtroProvidencia,
         limit: 0,
       });
       setProdutos(data);
@@ -41,7 +43,7 @@ export function RelatorioPage() {
     } finally {
       setLoading(false);
     }
-  }, [busca, filtroMinimo]);
+  }, [busca, filtroMinimo, filtroProvidencia]);
 
   useEffect(() => {
     const timer = setTimeout(carregar, 300);
@@ -148,6 +150,14 @@ export function RelatorioPage() {
         >
           <Filter className="h-4 w-4" />
           Abaixo do mínimo
+        </Button>
+        <Button
+          variant={filtroProvidencia ? 'default' : 'outline'}
+          onClick={() => setFiltroProvidencia(!filtroProvidencia)}
+          className="gap-2"
+        >
+          <ClipboardList className="h-4 w-4" />
+          Com providência
         </Button>
       </div>
 

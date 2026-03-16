@@ -2,10 +2,11 @@ import { api } from './api';
 import type { Produto } from '@/types';
 
 export const produtosService = {
-  list: (params?: { nome?: string; estoqueminimo?: boolean; limit?: number }) => {
+  list: (params?: { nome?: string; estoqueminimo?: boolean; providencia?: boolean; limit?: number }) => {
     const query = new URLSearchParams();
     if (params?.nome) query.set('nome', params.nome);
     if (params?.estoqueminimo) query.set('estoqueminimo', 'true');
+    if (params?.providencia) query.set('providencia', 'true');
     if (params?.limit) query.set('limit', String(params.limit));
     const qs = query.toString();
     return api.get<Produto[]>(`/produtos${qs ? `?${qs}` : ''}`);
