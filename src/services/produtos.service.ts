@@ -21,6 +21,9 @@ export const produtosService = {
 
   delete: (id: string) => api.delete(`/produtos/${id}`),
 
+  summary: () =>
+    api.get<{ totalProdutos: number; totalItens: number; abaixoMinimo: number }>('/produtos/summary'),
+
   exportCsv: (params?: { nome?: string; estoqueminimo?: boolean }) => {
     const query = new URLSearchParams();
     if (params?.nome) query.set('nome', params.nome);

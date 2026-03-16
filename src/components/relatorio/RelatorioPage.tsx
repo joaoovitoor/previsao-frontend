@@ -18,9 +18,14 @@ import type { Produto } from '@/types';
 
 export function RelatorioPage() {
   const [produtos, setProdutos] = useState<Produto[]>([]);
+  const [summary, setSummary] = useState({ totalProdutos: 0, totalItens: 0, abaixoMinimo: 0 });
   const [busca, setBusca] = useState('');
   const [filtroMinimo, setFiltroMinimo] = useState(false);
   const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    produtosService.summary().then(setSummary).catch(() => {});
+  }, []);
 
   const carregar = useCallback(async () => {
     setLoading(true);
@@ -70,9 +75,7 @@ export function RelatorioPage() {
     }
   };
 
-  const totalProdutos = produtos.length;
-  const abaixoMinimo = produtos.filter((p) => p.saldo <= p.estoqueminimo).length;
-  const totalItens = produtos.reduce((acc, p) => acc + (p.saldo || 0), 0);
+  const { totalProdutos, totalItens, abaixoMinimo } = summary;
 
   const columns: Column<Produto>[] = [
     { key: 'codigo', header: 'Código', render: (p) => <span className="font-mono text-xs text-gray-600">{p.codigo}</span> },
