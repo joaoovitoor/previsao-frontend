@@ -12,7 +12,7 @@ import { formatCpf, formatPhone } from '@/lib/utils';
 import Link from 'next/link';
 
 export default function MinhaContaPage() {
-  const { user, login } = useAuth();
+  const { user } = useAuth();
   const [editing, setEditing] = useState(false);
   const [saving, setSaving] = useState(false);
   const [form, setForm] = useState({
