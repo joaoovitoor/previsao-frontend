@@ -277,8 +277,8 @@ export function ProdutosPage() {
   return (
     <div className="space-y-6">
       <PageHeader
-        title="Produtos"
-        subtitle="Gerencie produtos, estoque e movimentações"
+        title="Movimentações"
+        subtitle="Gerencie produtos, entradas e saídas de estoque"
         actions={
           <Button onClick={abrirNovo} className="gap-2 shadow-md bg-accent hover:bg-accent-dark">
             <Plus className="h-4 w-4" />

@@ -120,8 +120,8 @@ export function RelatorioPage() {
   return (
     <div className="space-y-5">
       <PageHeader
-        title="Relatório de Estoque"
-        subtitle="Visão geral do inventário"
+        title="Inventário"
+        subtitle="Visão geral do estoque"
         actions={
           <Button onClick={exportarCsv} variant="outline" className="gap-2 shadow-sm">
             <Download className="h-4 w-4" />

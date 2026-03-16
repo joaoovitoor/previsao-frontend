@@ -18,9 +18,9 @@ export function AppShell({ children }: { children: ReactNode }) {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-gray-50">
       <Sidebar />
-      <main className="ml-14 pt-14 min-h-screen">
+      <main className="sm:ml-16 pt-14 min-h-screen">
         <div className="p-5">
           {children}
         </div>
