@@ -35,7 +35,6 @@ export function RelatorioPage() {
         estoqueminimo: filtroMinimo,
         limit: 0,
       });
-      data.sort((a, b) => a.codigo.toUpperCase().localeCompare(b.codigo.toUpperCase()));
       setProdutos(data);
     } catch {
       toast.error('Erro ao carregar produtos');
