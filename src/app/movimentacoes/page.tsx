@@ -1,5 +1,10 @@
+import { Suspense } from 'react';
 import { MovimentacoesPage } from '@/components/movimentacoes/MovimentacoesPage';
 
 export default function Movimentacoes() {
-  return <MovimentacoesPage />;
+  return (
+    <Suspense>
+      <MovimentacoesPage />
+    </Suspense>
+  );
 }

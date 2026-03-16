@@ -5,6 +5,9 @@ import { usuariosService } from '@/services/usuarios.service';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
+import { PageHeader } from '@/components/ui/page-header';
+import { DataTable, type Column } from '@/components/ui/data-table';
+import { FormField, FormRow } from '@/components/ui/form-field';
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle,
 } from '@/components/ui/dialog';
@@ -129,87 +132,65 @@ export function UsuariosPage() {
     }
   };
 
-  return (
-    <div className="space-y-5 max-w-[1400px]">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">Usuários</h1>
-          <p className="text-sm text-gray-500 mt-1">{usuarios.length} usuários cadastrados</p>
+  const columns: Column<Usuario>[] = [
+    {
+      key: 'nome', header: 'Nome',
+      render: (u) => (
+        <div className="flex items-center gap-2.5">
+          <div className="h-8 w-8 rounded-full bg-surface flex items-center justify-center shrink-0">
+            <span className="text-xs font-semibold text-white">{u.nome?.charAt(0)?.toUpperCase()}</span>
+          </div>
+          <span className="font-medium text-gray-900">{u.nome}</span>
         </div>
-        <Button onClick={abrirNovo} className="gap-2 shadow-md bg-accent hover:bg-accent-dark">
-          <Plus className="h-4 w-4" />
-          Novo Usuário
-        </Button>
-      </div>
+      ),
+    },
+    { key: 'email', header: 'Email', render: (u) => <span className="text-gray-500">{u.email || '—'}</span> },
+    { key: 'telefone', header: 'Telefone', render: (u) => <span className="text-gray-500">{u.telefone ? formatPhone(u.telefone) : '—'}</span> },
+    { key: 'cpf', header: 'CPF', render: (u) => <span className="font-mono text-xs text-gray-600">{formatCpf(u.cpf)}</span> },
+    {
+      key: 'role', header: 'Perfil', align: 'center',
+      render: (u) => (
+        <Badge variant={u.role === 'admin' ? 'default' : 'secondary'}>
+          {u.role === 'admin' ? 'Admin' : 'Operador'}
+        </Badge>
+      ),
+    },
+    {
+      key: 'acoes', header: 'Ações', align: 'right',
+      render: (u) => (
+        <div className="flex justify-end gap-1">
+          <Button size="icon" variant="ghost" onClick={() => abrirEditar(u)} className="h-8 w-8 text-accent hover:text-accent-dark hover:bg-blue-50">
+            <Pencil className="h-4 w-4" />
+          </Button>
+          <Button size="icon" variant="ghost" onClick={() => excluir(u)} className="h-8 w-8 text-red-500 hover:text-red-700 hover:bg-red-50">
+            <Trash2 className="h-4 w-4" />
+          </Button>
+        </div>
+      ),
+    },
+  ];
 
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="bg-surface text-white">
-                <th className="text-left px-4 py-3 font-semibold text-sm">Nome</th>
-                <th className="text-left px-4 py-3 font-semibold text-sm">Email</th>
-                <th className="text-left px-4 py-3 font-semibold text-sm">Telefone</th>
-                <th className="text-left px-4 py-3 font-semibold text-sm">CPF</th>
-                <th className="text-center px-4 py-3 font-semibold text-sm">Perfil</th>
-                <th className="text-right px-4 py-3 font-semibold text-sm">Ações</th>
-              </tr>
-            </thead>
-            <tbody>
-              {loading ? (
-                <tr>
-                  <td colSpan={6} className="text-center py-12 text-gray-400">
-                    <div className="flex flex-col items-center gap-2">
-                      <div className="h-6 w-6 border-2 border-gray-300 border-t-gray-600 rounded-full animate-spin" />
-                      <span>Carregando...</span>
-                    </div>
-                  </td>
-                </tr>
-              ) : usuarios.length === 0 ? (
-                <tr>
-                  <td colSpan={6} className="text-center py-12 text-gray-400">
-                    <div className="flex flex-col items-center gap-2">
-                      <UsersIcon className="h-8 w-8 text-gray-300" />
-                      <span>Nenhum usuário encontrado</span>
-                    </div>
-                  </td>
-                </tr>
-              ) : (
-                usuarios.map((u, i) => (
-                  <tr key={u.id} className={`border-b border-gray-100 hover:bg-blue-50/50 transition-colors ${i % 2 === 0 ? 'bg-white' : 'bg-gray-50/50'}`}>
-                    <td className="px-4 py-3">
-                      <div className="flex items-center gap-2.5">
-                        <div className="h-8 w-8 rounded-full bg-surface flex items-center justify-center shrink-0">
-                          <span className="text-xs font-semibold text-white">{u.nome?.charAt(0)?.toUpperCase()}</span>
-                        </div>
-                        <span className="font-medium text-gray-900">{u.nome}</span>
-                      </div>
-                    </td>
-                    <td className="px-4 py-3 text-gray-500">{u.email || '—'}</td>
-                    <td className="px-4 py-3 text-gray-500">{u.telefone ? formatPhone(u.telefone) : '—'}</td>
-                    <td className="px-4 py-3 font-mono text-xs text-gray-600">{formatCpf(u.cpf)}</td>
-                    <td className="px-4 py-3 text-center">
-                      <Badge variant={u.role === 'admin' ? 'default' : 'secondary'}>
-                        {u.role === 'admin' ? 'Admin' : 'Operador'}
-                      </Badge>
-                    </td>
-                    <td className="px-4 py-3">
-                      <div className="flex justify-end gap-1">
-                        <Button size="icon" variant="ghost" onClick={() => abrirEditar(u)} className="h-8 w-8 text-accent hover:text-accent-dark hover:bg-blue-50">
-                          <Pencil className="h-4 w-4" />
-                        </Button>
-                        <Button size="icon" variant="ghost" onClick={() => excluir(u)} className="h-8 w-8 text-red-500 hover:text-red-700 hover:bg-red-50">
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
-                      </div>
-                    </td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
-      </div>
+  return (
+    <div className="space-y-5">
+      <PageHeader
+        title="Usuários"
+        subtitle={`${usuarios.length} usuários cadastrados`}
+        actions={
+          <Button onClick={abrirNovo} className="gap-2 shadow-md bg-accent hover:bg-accent-dark">
+            <Plus className="h-4 w-4" />
+            Novo Usuário
+          </Button>
+        }
+      />
+
+      <DataTable
+        columns={columns}
+        data={usuarios}
+        loading={loading}
+        emptyIcon={UsersIcon}
+        emptyMessage="Nenhum usuário encontrado"
+        keyExtractor={(u) => u.id}
+      />
 
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent>
@@ -217,66 +198,58 @@ export function UsuariosPage() {
             <DialogTitle>{editando ? 'Editar Usuário' : 'Novo Usuário'}</DialogTitle>
           </DialogHeader>
           <form onSubmit={salvar} className="space-y-4 mt-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Nome</label>
+            <FormField label="Nome">
               <Input
                 value={form.nome}
                 onChange={(e) => setForm({ ...form, nome: e.target.value })}
                 placeholder="Nome completo"
               />
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+            </FormField>
+            <FormRow>
+              <FormField label="Email">
                 <Input
                   type="email"
                   value={form.email}
                   onChange={(e) => setForm({ ...form, email: e.target.value })}
                   placeholder="email@exemplo.com"
                 />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Telefone</label>
+              </FormField>
+              <FormField label="Telefone">
                 <Input
                   value={form.telefone}
                   onChange={(e) => setForm({ ...form, telefone: formatPhoneInput(e.target.value) })}
                   placeholder="(11) 99999-9999"
                 />
-              </div>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">CPF</label>
+              </FormField>
+            </FormRow>
+            <FormField label="CPF">
               <Input
                 value={form.cpf}
                 onChange={(e) => setForm({ ...form, cpf: formatCpfInput(e.target.value) })}
                 placeholder="000.000.000-00"
                 maxLength={14}
               />
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  {editando ? 'Nova Senha (opcional)' : 'Senha'}
-                </label>
+            </FormField>
+            <FormRow>
+              <FormField label={editando ? 'Nova Senha (opcional)' : 'Senha'}>
                 <Input
                   type="password"
                   value={form.senha}
                   onChange={(e) => setForm({ ...form, senha: e.target.value })}
                   placeholder={editando ? 'Deixe vazio para manter' : 'Mínimo 6 caracteres'}
                 />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Perfil</label>
+              </FormField>
+              <FormField label="Perfil">
                 <select
                   value={form.role}
                   onChange={(e) => setForm({ ...form, role: e.target.value })}
-                  className="flex h-10 w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="flex h-10 w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-accent"
                 >
                   <option value="operador">Operador</option>
                   <option value="admin">Administrador</option>
                 </select>
-              </div>
-            </div>
+              </FormField>
+            </FormRow>
             <div className="flex justify-end gap-3 pt-2">
               <Button type="button" variant="outline" onClick={() => setDialogOpen(false)}>
                 Cancelar

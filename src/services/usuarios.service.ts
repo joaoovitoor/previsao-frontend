@@ -19,4 +19,12 @@ export const usuariosService = {
     api.patch<Usuario>(`/usuarios/${id}`, data),
 
   delete: (id: string) => api.delete(`/usuarios/${id}`),
+
+  getMe: () => api.get<Usuario>('/usuarios/me'),
+
+  updateMe: (data: { nome?: string; email?: string; telefone?: string }) =>
+    api.patch<Usuario>('/usuarios/me', data),
+
+  changePassword: (senhaAtual: string, novaSenha: string) =>
+    api.patch<Usuario>('/usuarios/me/senha', { senhaAtual, novaSenha }),
 };
