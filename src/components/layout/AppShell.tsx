@@ -26,7 +26,12 @@ export function AppShell({ children }: { children: ReactNode }) {
   return (
     <div className="min-h-screen bg-gray-100">
       <Sidebar />
-      <main className="lg:ml-64 p-5 pt-16 lg:pt-5 min-h-screen">{children}</main>
+      {/* Conteúdo principal - margem esquerda do drawer colapsado (56px) + margem top da AppBar (56px) */}
+      <main className="ml-14 pt-14 min-h-screen">
+        <div className="p-5">
+          {children}
+        </div>
+      </main>
     </div>
   );
 }

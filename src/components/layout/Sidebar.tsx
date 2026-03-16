@@ -10,71 +10,107 @@ import {
   Users,
   LogOut,
   Menu,
-  X,
+  ChevronLeft,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/contexts/AuthContext';
 import { useState } from 'react';
 
 const navItems = [
-  { href: '/', label: 'Relatório', icon: LayoutDashboard },
+  { href: '/', label: 'Relatório Estoque', icon: LayoutDashboard },
   { href: '/produtos', label: 'Produtos', icon: Package },
   { href: '/movimentacoes', label: 'Movimentações', icon: ArrowLeftRight },
   { href: '/usuarios', label: 'Usuários', icon: Users, adminOnly: true },
 ];
+
+const pageTitles: Record<string, string> = {
+  '/': 'Relatório Estoque',
+  '/produtos': 'Produtos',
+  '/movimentacoes': 'Movimentações',
+  '/usuarios': 'Usuários',
+};
 
 export function Sidebar() {
   const pathname = usePathname();
   const { user, logout } = useAuth();
   const [open, setOpen] = useState(false);
 
+  const pageTitle = pageTitles[pathname] || 'Previsão Presilhas';
+
   return (
     <>
-      <button
-        onClick={() => setOpen(true)}
-        className="fixed top-4 left-4 z-50 lg:hidden p-2.5 bg-surface text-white rounded-lg shadow-lg"
-      >
-        <Menu className="h-5 w-5" />
-      </button>
-
-      {open && (
-        <div
-          className="fixed inset-0 z-40 bg-black/40 lg:hidden backdrop-blur-sm"
-          onClick={() => setOpen(false)}
-        />
-      )}
-
-      <aside
+      {/* AppBar - barra superior fixa como o antigo */}
+      <header
         className={cn(
-          'fixed inset-y-0 left-0 z-50 w-64 bg-white flex flex-col transition-transform lg:translate-x-0 shadow-xl lg:shadow-md border-r border-gray-200',
-          open ? 'translate-x-0' : '-translate-x-full',
+          'fixed top-0 right-0 z-40 h-14 bg-surface flex items-center px-4 transition-all duration-200',
+          open ? 'left-60' : 'left-14',
         )}
       >
-        {/* Header com logo da empresa */}
-        <div className="bg-surface px-4 py-4 flex items-center gap-3">
-          <Image
-            src="/logo_previsao.png"
-            alt="Previsão Presilhas"
-            width={160}
-            height={50}
-            className="h-[42px] w-auto"
-            priority
-          />
+        {!open && (
           <button
-            onClick={() => setOpen(false)}
-            className="lg:hidden ml-auto text-gray-400 hover:text-white transition-colors"
+            onClick={() => setOpen(true)}
+            className="p-1.5 text-white/80 hover:text-white rounded transition-colors mr-3 cursor-pointer"
           >
-            <X className="h-5 w-5" />
+            <Menu className="h-5 w-5" />
+          </button>
+        )}
+        <h1 className="text-white text-base font-medium flex-1 truncate">
+          {pageTitle}
+        </h1>
+        <div className="flex items-center gap-3">
+          <span className="text-white/70 text-sm hidden sm:block">{user?.nome}</span>
+          <button
+            onClick={logout}
+            className="p-1.5 text-white/70 hover:text-white rounded transition-colors cursor-pointer"
+            title="Sair"
+          >
+            <LogOut className="h-5 w-5" />
           </button>
         </div>
+      </header>
 
-        <div className="px-4 py-2">
-          <p className="text-[11px] text-gray-400 uppercase tracking-wider font-semibold">
-            Controle de Estoque
-          </p>
+      {/* Drawer lateral - colapsável como o antigo */}
+      <aside
+        className={cn(
+          'fixed inset-y-0 left-0 z-50 bg-white border-r border-gray-200 flex flex-col transition-all duration-200 overflow-hidden',
+          open ? 'w-60' : 'w-14',
+        )}
+      >
+        {/* Logo + botão colapsar */}
+        <div className="h-14 flex items-center bg-surface px-2 shrink-0">
+          {open ? (
+            <>
+              <Image
+                src="/logo_previsao.png"
+                alt="Previsão Presilhas"
+                width={140}
+                height={44}
+                className="h-9 w-auto ml-1"
+                priority
+              />
+              <button
+                onClick={() => setOpen(false)}
+                className="ml-auto p-1.5 text-white/70 hover:text-white rounded transition-colors cursor-pointer"
+              >
+                <ChevronLeft className="h-5 w-5" />
+              </button>
+            </>
+          ) : (
+            <Image
+              src="/favicon.png"
+              alt="Previsão"
+              width={32}
+              height={32}
+              className="h-8 w-8 mx-auto"
+              priority
+            />
+          )}
         </div>
 
-        <nav className="flex-1 px-3 space-y-0.5">
+        <div className="border-b border-gray-200" />
+
+        {/* Navegação */}
+        <nav className="flex-1 py-2">
           {navItems
             .filter((item) => !item.adminOnly || user?.role === 'admin')
             .map((item) => {
@@ -86,41 +122,23 @@ export function Sidebar() {
                 <Link
                   key={item.href}
                   href={item.href}
-                  onClick={() => setOpen(false)}
+                  title={item.label}
                   className={cn(
-                    'flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all',
+                    'flex items-center h-11 transition-colors',
+                    open ? 'px-4 gap-3' : 'justify-center',
                     isActive
-                      ? 'bg-surface text-white shadow-md'
-                      : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900',
+                      ? 'bg-accent/10 text-accent border-r-3 border-accent'
+                      : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900',
                   )}
                 >
-                  <item.icon className={cn('h-5 w-5', isActive && 'text-accent-light')} />
-                  {item.label}
+                  <item.icon className="h-5 w-5 shrink-0" />
+                  {open && (
+                    <span className="text-sm font-medium truncate">{item.label}</span>
+                  )}
                 </Link>
               );
             })}
         </nav>
-
-        <div className="p-3 border-t border-gray-100 bg-gray-50/50">
-          <div className="flex items-center gap-3 mb-2 px-2">
-            <div className="h-9 w-9 rounded-full bg-surface flex items-center justify-center shadow-sm">
-              <span className="text-sm font-semibold text-white">
-                {user?.nome?.charAt(0)?.toUpperCase()}
-              </span>
-            </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-gray-900 truncate">{user?.nome}</p>
-              <p className="text-[11px] text-gray-500 capitalize">{user?.role}</p>
-            </div>
-          </div>
-          <button
-            onClick={logout}
-            className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-brand hover:bg-red-50 w-full transition-colors cursor-pointer font-medium"
-          >
-            <LogOut className="h-4 w-4" />
-            Sair
-          </button>
-        </div>
       </aside>
     </>
   );

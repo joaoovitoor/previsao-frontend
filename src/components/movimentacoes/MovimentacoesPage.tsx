@@ -99,7 +99,7 @@ export function MovimentacoesPage() {
     : 'from-red-500 to-red-700';
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 max-w-[1000px]">
       <div>
         <h1 className="text-2xl font-bold text-gray-900">Movimentação de Estoque</h1>
         <p className="text-sm text-gray-500 mt-1">Registrar entradas e saídas</p>
