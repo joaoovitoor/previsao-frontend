@@ -8,7 +8,7 @@ import { cn } from '@/lib/utils';
 
 interface Column<T> {
   key: string;
-  header: string;
+  header: ReactNode;
   align?: 'left' | 'center' | 'right';
   width?: string;
   render: (item: T, index: number) => ReactNode;
