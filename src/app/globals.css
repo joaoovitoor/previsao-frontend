@@ -36,3 +36,27 @@ body {
     transform: translate(-50%, -50%) scale(0.95);
   }
 }
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c4c4c4;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a0a0a0;
+}
+
+/* Table row striping via nth-child when not using inline alternation */
+table tbody tr {
+  transition: background-color 0.15s ease;
+}

@@ -9,7 +9,7 @@ import {
   Dialog, DialogContent, DialogHeader, DialogTitle,
 } from '@/components/ui/dialog';
 import { toast } from 'sonner';
-import { Plus, Pencil, Trash2 } from 'lucide-react';
+import { Plus, Pencil, Trash2, Users as UsersIcon } from 'lucide-react';
 import { formatCpf, formatPhone } from '@/lib/utils';
 import type { Usuario } from '@/types';
 
@@ -130,58 +130,75 @@ export function UsuariosPage() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-5">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Usuários</h1>
           <p className="text-sm text-gray-500 mt-1">{usuarios.length} usuários cadastrados</p>
         </div>
-        <Button onClick={abrirNovo} className="gap-2">
+        <Button onClick={abrirNovo} className="gap-2 shadow-md">
           <Plus className="h-4 w-4" />
           Novo Usuário
         </Button>
       </div>
 
-      <div className="bg-white rounded-xl border overflow-hidden">
+      <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr className="bg-gray-50 border-b">
-                <th className="text-left px-4 py-3 font-medium text-gray-600">Nome</th>
-                <th className="text-left px-4 py-3 font-medium text-gray-600">Email</th>
-                <th className="text-left px-4 py-3 font-medium text-gray-600">Telefone</th>
-                <th className="text-left px-4 py-3 font-medium text-gray-600">CPF</th>
-                <th className="text-center px-4 py-3 font-medium text-gray-600">Perfil</th>
-                <th className="text-right px-4 py-3 font-medium text-gray-600">Ações</th>
+              <tr className="bg-gray-800 text-white">
+                <th className="text-left px-4 py-3 font-semibold text-sm">Nome</th>
+                <th className="text-left px-4 py-3 font-semibold text-sm">Email</th>
+                <th className="text-left px-4 py-3 font-semibold text-sm">Telefone</th>
+                <th className="text-left px-4 py-3 font-semibold text-sm">CPF</th>
+                <th className="text-center px-4 py-3 font-semibold text-sm">Perfil</th>
+                <th className="text-right px-4 py-3 font-semibold text-sm">Ações</th>
               </tr>
             </thead>
             <tbody>
               {loading ? (
                 <tr>
-                  <td colSpan={6} className="text-center py-8 text-gray-400">Carregando...</td>
+                  <td colSpan={6} className="text-center py-12 text-gray-400">
+                    <div className="flex flex-col items-center gap-2">
+                      <div className="h-6 w-6 border-2 border-gray-300 border-t-gray-600 rounded-full animate-spin" />
+                      <span>Carregando...</span>
+                    </div>
+                  </td>
                 </tr>
               ) : usuarios.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="text-center py-8 text-gray-400">Nenhum usuário encontrado</td>
+                  <td colSpan={6} className="text-center py-12 text-gray-400">
+                    <div className="flex flex-col items-center gap-2">
+                      <UsersIcon className="h-8 w-8 text-gray-300" />
+                      <span>Nenhum usuário encontrado</span>
+                    </div>
+                  </td>
                 </tr>
               ) : (
-                usuarios.map((u) => (
-                  <tr key={u.id} className="border-b hover:bg-gray-50 transition-colors">
-                    <td className="px-4 py-3 font-medium">{u.nome}</td>
+                usuarios.map((u, i) => (
+                  <tr key={u.id} className={`border-b border-gray-100 hover:bg-blue-50/50 transition-colors ${i % 2 === 0 ? 'bg-white' : 'bg-gray-50/50'}`}>
+                    <td className="px-4 py-3">
+                      <div className="flex items-center gap-2.5">
+                        <div className="h-8 w-8 rounded-full bg-gray-800 flex items-center justify-center shrink-0">
+                          <span className="text-xs font-semibold text-white">{u.nome?.charAt(0)?.toUpperCase()}</span>
+                        </div>
+                        <span className="font-medium text-gray-900">{u.nome}</span>
+                      </div>
+                    </td>
                     <td className="px-4 py-3 text-gray-500">{u.email || '—'}</td>
                     <td className="px-4 py-3 text-gray-500">{u.telefone ? formatPhone(u.telefone) : '—'}</td>
-                    <td className="px-4 py-3 font-mono text-xs">{formatCpf(u.cpf)}</td>
+                    <td className="px-4 py-3 font-mono text-xs text-gray-600">{formatCpf(u.cpf)}</td>
                     <td className="px-4 py-3 text-center">
                       <Badge variant={u.role === 'admin' ? 'default' : 'secondary'}>
-                        {u.role}
+                        {u.role === 'admin' ? 'Admin' : 'Operador'}
                       </Badge>
                     </td>
                     <td className="px-4 py-3">
                       <div className="flex justify-end gap-1">
-                        <Button size="icon" variant="ghost" onClick={() => abrirEditar(u)}>
+                        <Button size="icon" variant="ghost" onClick={() => abrirEditar(u)} className="h-8 w-8 text-blue-600 hover:text-blue-800 hover:bg-blue-50">
                           <Pencil className="h-4 w-4" />
                         </Button>
-                        <Button size="icon" variant="ghost" onClick={() => excluir(u)} className="text-red-500 hover:text-red-700">
+                        <Button size="icon" variant="ghost" onClick={() => excluir(u)} className="h-8 w-8 text-red-500 hover:text-red-700 hover:bg-red-50">
                           <Trash2 className="h-4 w-4" />
                         </Button>
                       </div>
@@ -264,7 +281,7 @@ export function UsuariosPage() {
               <Button type="button" variant="outline" onClick={() => setDialogOpen(false)}>
                 Cancelar
               </Button>
-              <Button type="submit">
+              <Button type="submit" variant="success">
                 {editando ? 'Salvar' : 'Criar'}
               </Button>
             </div>

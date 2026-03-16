@@ -10,10 +10,10 @@ export function AppShell({ children }: { children: ReactNode }) {
 
   if (loading) {
     return (
-      <div className="h-screen flex items-center justify-center">
+      <div className="h-screen flex items-center justify-center bg-gray-50">
         <div className="flex flex-col items-center gap-4">
-          <div className="h-10 w-10 border-4 border-blue-600 border-t-transparent rounded-full animate-spin" />
-          <p className="text-sm text-gray-500">Carregando...</p>
+          <div className="h-10 w-10 border-4 border-gray-800 border-t-transparent rounded-full animate-spin" />
+          <p className="text-sm text-gray-500 font-medium">Carregando...</p>
         </div>
       </div>
     );
@@ -24,9 +24,9 @@ export function AppShell({ children }: { children: ReactNode }) {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-100">
       <Sidebar />
-      <main className="lg:ml-64 p-6 pt-16 lg:pt-6">{children}</main>
+      <main className="lg:ml-64 p-5 pt-16 lg:pt-5 min-h-screen">{children}</main>
     </div>
   );
 }

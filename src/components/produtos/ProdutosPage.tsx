@@ -116,13 +116,13 @@ export function ProdutosPage() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-5">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Produtos</h1>
           <p className="text-sm text-gray-500 mt-1">{produtos.length} produtos cadastrados</p>
         </div>
-        <Button onClick={abrirNovo} className="gap-2">
+        <Button onClick={abrirNovo} className="gap-2 shadow-md">
           <Plus className="h-4 w-4" />
           Novo Produto
         </Button>
@@ -138,45 +138,54 @@ export function ProdutosPage() {
         />
       </div>
 
-      <div className="bg-white rounded-xl border overflow-hidden">
+      <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr className="bg-gray-50 border-b">
-                <th className="text-left px-4 py-3 font-medium text-gray-600">Código</th>
-                <th className="text-left px-4 py-3 font-medium text-gray-600">Nome</th>
-                <th className="text-center px-4 py-3 font-medium text-gray-600">Mínimo</th>
-                <th className="text-center px-4 py-3 font-medium text-gray-600">Ideal</th>
-                <th className="text-center px-4 py-3 font-medium text-gray-600">Saldo</th>
-                <th className="text-right px-4 py-3 font-medium text-gray-600">Ações</th>
+              <tr className="bg-gray-800 text-white">
+                <th className="text-left px-4 py-3 font-semibold text-sm">Código</th>
+                <th className="text-left px-4 py-3 font-semibold text-sm">Nome</th>
+                <th className="text-center px-4 py-3 font-semibold text-sm">Mínimo</th>
+                <th className="text-center px-4 py-3 font-semibold text-sm">Ideal</th>
+                <th className="text-center px-4 py-3 font-semibold text-sm">Saldo</th>
+                <th className="text-right px-4 py-3 font-semibold text-sm">Ações</th>
               </tr>
             </thead>
             <tbody>
               {loading ? (
                 <tr>
-                  <td colSpan={6} className="text-center py-8 text-gray-400">Carregando...</td>
+                  <td colSpan={6} className="text-center py-12 text-gray-400">
+                    <div className="flex flex-col items-center gap-2">
+                      <div className="h-6 w-6 border-2 border-gray-300 border-t-gray-600 rounded-full animate-spin" />
+                      <span>Carregando...</span>
+                    </div>
+                  </td>
                 </tr>
               ) : produtos.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="text-center py-8 text-gray-400">Nenhum produto encontrado</td>
+                  <td colSpan={6} className="text-center py-12 text-gray-400">Nenhum produto encontrado</td>
                 </tr>
               ) : (
-                produtos.map((p) => (
-                  <tr key={p.id} className="border-b hover:bg-gray-50 transition-colors">
-                    <td className="px-4 py-3 font-mono text-xs">{p.codigo}</td>
-                    <td className="px-4 py-3 font-medium">{p.nome}</td>
-                    <td className="px-4 py-3 text-center">{p.estoqueminimo}</td>
-                    <td className="px-4 py-3 text-center">{p.estoqueideal}</td>
-                    <td className="px-4 py-3 text-center font-semibold">{p.saldo}</td>
+                produtos.map((p, i) => (
+                  <tr key={p.id} className={`border-b border-gray-100 hover:bg-blue-50/50 transition-colors ${i % 2 === 0 ? 'bg-white' : 'bg-gray-50/50'}`}>
+                    <td className="px-4 py-3 font-mono text-xs text-gray-600">{p.codigo}</td>
+                    <td className="px-4 py-3 font-medium text-gray-900">{p.nome}</td>
+                    <td className="px-4 py-3 text-center text-gray-600">{p.estoqueminimo}</td>
+                    <td className="px-4 py-3 text-center text-gray-600">{p.estoqueideal}</td>
+                    <td className="px-4 py-3 text-center">
+                      <span className={`font-bold ${p.saldo <= p.estoqueminimo ? 'text-red-600' : p.saldo <= p.estoqueideal ? 'text-amber-600' : 'text-emerald-600'}`}>
+                        {p.saldo}
+                      </span>
+                    </td>
                     <td className="px-4 py-3">
                       <div className="flex justify-end gap-1">
-                        <Button size="icon" variant="ghost" onClick={() => mostrarBarcode(p)} title="Código de barras">
+                        <Button size="icon" variant="ghost" onClick={() => mostrarBarcode(p)} title="Código de barras" className="h-8 w-8">
                           <Barcode className="h-4 w-4" />
                         </Button>
-                        <Button size="icon" variant="ghost" onClick={() => abrirEditar(p)} title="Editar">
+                        <Button size="icon" variant="ghost" onClick={() => abrirEditar(p)} title="Editar" className="h-8 w-8 text-blue-600 hover:text-blue-800 hover:bg-blue-50">
                           <Pencil className="h-4 w-4" />
                         </Button>
-                        <Button size="icon" variant="ghost" onClick={() => excluir(p)} title="Excluir" className="text-red-500 hover:text-red-700">
+                        <Button size="icon" variant="ghost" onClick={() => excluir(p)} title="Excluir" className="h-8 w-8 text-red-500 hover:text-red-700 hover:bg-red-50">
                           <Trash2 className="h-4 w-4" />
                         </Button>
                       </div>
@@ -235,7 +244,7 @@ export function ProdutosPage() {
               <Button type="button" variant="outline" onClick={() => setDialogOpen(false)}>
                 Cancelar
               </Button>
-              <Button type="submit">
+              <Button type="submit" variant="success">
                 {editando ? 'Salvar' : 'Criar'}
               </Button>
             </div>

@@ -9,7 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
 import {
   ArrowUpCircle, ArrowDownCircle, Plus,
-  Search, Package,
+  Search, Package, Send,
 } from 'lucide-react';
 import { formatDate } from '@/lib/utils';
 import type { Produto, Movimentacao } from '@/types';
@@ -101,8 +101,40 @@ export function MovimentacoesPage() {
         <p className="text-sm text-gray-500 mt-1">Registrar entradas e saídas</p>
       </div>
 
-      <div className="bg-white rounded-xl border p-6 space-y-4">
-        <div className="relative">
+      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+        {/* Tipo - botões grandes como o antigo */}
+        <div className="mb-6">
+          <label className="block text-sm font-medium text-gray-700 mb-3">Tipo de Movimentação</label>
+          <div className="grid grid-cols-2 gap-3">
+            <button
+              type="button"
+              onClick={() => setTipo('entrada')}
+              className={`flex flex-col items-center justify-center gap-2 py-6 rounded-xl text-lg font-bold transition-all cursor-pointer border-2 ${
+                tipo === 'entrada'
+                  ? 'bg-emerald-600 text-white border-emerald-600 shadow-lg shadow-emerald-200'
+                  : 'bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100'
+              }`}
+            >
+              <ArrowUpCircle className={`h-8 w-8 ${tipo === 'entrada' ? 'text-white' : 'text-emerald-500'}`} />
+              ENTRADA
+            </button>
+            <button
+              type="button"
+              onClick={() => setTipo('saida')}
+              className={`flex flex-col items-center justify-center gap-2 py-6 rounded-xl text-lg font-bold transition-all cursor-pointer border-2 ${
+                tipo === 'saida'
+                  ? 'bg-red-600 text-white border-red-600 shadow-lg shadow-red-200'
+                  : 'bg-red-50 text-red-700 border-red-200 hover:bg-red-100'
+              }`}
+            >
+              <ArrowDownCircle className={`h-8 w-8 ${tipo === 'saida' ? 'text-white' : 'text-red-500'}`} />
+              SAÍDA
+            </button>
+          </div>
+        </div>
+
+        {/* Produto */}
+        <div className="relative mb-4">
           <label className="block text-sm font-medium text-gray-700 mb-1">Produto</label>
           <div className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
@@ -114,92 +146,109 @@ export function MovimentacoesPage() {
                 setProdutoSelecionado(null);
               }}
               onFocus={() => produtos.length > 0 && setShowDropdown(true)}
-              className="pl-10"
+              className="pl-10 h-11"
             />
           </div>
 
           {showDropdown && produtos.length > 0 && (
-            <div className="absolute z-10 mt-1 w-full bg-white rounded-lg border shadow-lg max-h-48 overflow-y-auto">
+            <div className="absolute z-10 mt-1 w-full bg-white rounded-lg border shadow-xl max-h-52 overflow-y-auto">
               {produtos.map((p) => (
                 <button
                   key={p.id}
                   onClick={() => selecionarProduto(p)}
-                  className="w-full text-left px-4 py-2.5 hover:bg-blue-50 flex items-center gap-3 text-sm transition-colors cursor-pointer"
+                  className="w-full text-left px-4 py-3 hover:bg-blue-50 flex items-center gap-3 text-sm transition-colors cursor-pointer border-b border-gray-50 last:border-0"
                 >
-                  <Package className="h-4 w-4 text-gray-400" />
-                  <span className="font-mono text-xs text-gray-500">{p.codigo}</span>
-                  <span className="font-medium">{p.nome}</span>
-                  <span className="ml-auto text-xs text-gray-400">Saldo: {p.saldo}</span>
+                  <Package className="h-4 w-4 text-gray-400 shrink-0" />
+                  <span className="font-mono text-xs text-gray-500 shrink-0">{p.codigo}</span>
+                  <span className="font-medium truncate">{p.nome}</span>
+                  <span className="ml-auto text-xs font-semibold shrink-0 px-2 py-0.5 rounded-full bg-gray-100">
+                    Saldo: {p.saldo}
+                  </span>
                 </button>
               ))}
             </div>
           )}
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Tipo</label>
-            <div className="flex gap-2">
-              <Button
-                type="button"
-                variant={tipo === 'entrada' ? 'success' : 'outline'}
-                className="flex-1 gap-2"
-                onClick={() => setTipo('entrada')}
-              >
-                <ArrowUpCircle className="h-4 w-4" />
-                Entrada
-              </Button>
-              <Button
-                type="button"
-                variant={tipo === 'saida' ? 'destructive' : 'outline'}
-                className="flex-1 gap-2"
-                onClick={() => setTipo('saida')}
-              >
-                <ArrowDownCircle className="h-4 w-4" />
-                Saída
-              </Button>
+        {produtoSelecionado && (
+          <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg flex items-center gap-3">
+            <Package className="h-5 w-5 text-blue-600 shrink-0" />
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-semibold text-blue-900 truncate">
+                {produtoSelecionado.codigo} - {produtoSelecionado.nome}
+              </p>
+              <p className="text-xs text-blue-600">Saldo atual: {produtoSelecionado.saldo}</p>
             </div>
           </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Quantidade</label>
-            <Input
-              type="number"
-              placeholder="0"
-              value={quantidade}
-              onChange={(e) => setQuantidade(e.target.value)}
-              min={1}
-            />
-          </div>
+        )}
+
+        {/* Quantidade */}
+        <div className="mb-5">
+          <label className="block text-sm font-medium text-gray-700 mb-1">Quantidade</label>
+          <Input
+            type="number"
+            placeholder="0"
+            value={quantidade}
+            onChange={(e) => setQuantidade(e.target.value)}
+            min={1}
+            className="h-11 text-lg font-semibold"
+          />
         </div>
 
-        <Button onClick={registrar} disabled={saving} className="w-full gap-2">
-          <Plus className="h-4 w-4" />
-          {saving ? 'Registrando...' : 'Registrar Movimentação'}
+        <Button
+          onClick={registrar}
+          disabled={saving}
+          className={`w-full h-12 text-base font-bold gap-2 shadow-md ${
+            tipo === 'entrada'
+              ? 'bg-emerald-600 hover:bg-emerald-700'
+              : 'bg-red-600 hover:bg-red-700'
+          }`}
+        >
+          <Send className="h-5 w-5" />
+          {saving ? 'Registrando...' : `Registrar ${tipo === 'entrada' ? 'Entrada' : 'Saída'}`}
         </Button>
       </div>
 
+      {/* Histórico */}
       <div>
-        <h2 className="text-lg font-semibold text-gray-900 mb-3">Últimas Movimentações</h2>
-        <div className="bg-white rounded-xl border divide-y">
+        <h2 className="text-lg font-bold text-gray-900 mb-3">Últimas Movimentações</h2>
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
           {movimentacoes.length === 0 ? (
-            <p className="text-sm text-gray-400 py-8 text-center">Nenhuma movimentação recente</p>
+            <p className="text-sm text-gray-400 py-12 text-center">Nenhuma movimentação recente</p>
           ) : (
-            movimentacoes.map((mov) => (
-              <div key={mov.id} className="flex items-center gap-4 px-4 py-3">
-                {mov.tipo === 'entrada' ? (
-                  <ArrowUpCircle className="h-5 w-5 text-emerald-500 shrink-0" />
-                ) : (
-                  <ArrowDownCircle className="h-5 w-5 text-red-500 shrink-0" />
-                )}
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium truncate">{mov.produto_nome}</p>
-                  <p className="text-xs text-gray-400">{formatDate(mov.created_at)}</p>
-                </div>
-                <Badge variant={mov.tipo === 'entrada' ? 'success' : 'danger'}>
-                  {mov.tipo === 'entrada' ? '+' : '-'}{mov.quantidade}
-                </Badge>
-              </div>
-            ))
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="bg-gray-800 text-white">
+                  <th className="text-left px-4 py-3 font-semibold">Tipo</th>
+                  <th className="text-left px-4 py-3 font-semibold">Produto</th>
+                  <th className="text-center px-4 py-3 font-semibold">Qtd</th>
+                  <th className="text-right px-4 py-3 font-semibold">Data</th>
+                </tr>
+              </thead>
+              <tbody>
+                {movimentacoes.map((mov, i) => (
+                  <tr key={mov.id} className={`border-b border-gray-100 ${i % 2 === 0 ? 'bg-white' : 'bg-gray-50/50'}`}>
+                    <td className="px-4 py-3">
+                      <div className="flex items-center gap-2">
+                        {mov.tipo === 'entrada' ? (
+                          <ArrowUpCircle className="h-5 w-5 text-emerald-500" />
+                        ) : (
+                          <ArrowDownCircle className="h-5 w-5 text-red-500" />
+                        )}
+                        <span className="capitalize font-medium">{mov.tipo}</span>
+                      </div>
+                    </td>
+                    <td className="px-4 py-3 text-gray-700 truncate max-w-[200px]">{mov.produto_nome}</td>
+                    <td className="px-4 py-3 text-center">
+                      <Badge variant={mov.tipo === 'entrada' ? 'success' : 'danger'}>
+                        {mov.tipo === 'entrada' ? '+' : '-'}{mov.quantidade}
+                      </Badge>
+                    </td>
+                    <td className="px-4 py-3 text-right text-gray-500 text-xs">{formatDate(mov.created_at)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           )}
         </div>
       </div>
