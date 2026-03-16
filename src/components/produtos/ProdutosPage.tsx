@@ -31,6 +31,7 @@ export function ProdutosPage() {
     setLoading(true);
     try {
       const data = await produtosService.list({ nome: busca || undefined });
+      data.sort((a, b) => (b.created_at || '').localeCompare(a.created_at || ''));
       setProdutos(data);
     } catch {
       toast.error('Erro ao carregar produtos');
@@ -226,12 +227,18 @@ export function ProdutosPage() {
                 <Input
                   type="number"
                   value={form.estoqueminimo}
-                  onChange={(e) => setForm({ ...form, estoqueminimo: Number(e.target.value) })}
+                  onChange={(e) => {
+                    const min = Number(e.target.value);
+                    setForm({ ...form, estoqueminimo: min, estoqueideal: min * 3 });
+                  }}
                   min={0}
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Estoque Ideal</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Estoque Ideal
+                  <span className="text-xs text-gray-400 ml-1">(auto: mín. × 3)</span>
+                </label>
                 <Input
                   type="number"
                   value={form.estoqueideal}
