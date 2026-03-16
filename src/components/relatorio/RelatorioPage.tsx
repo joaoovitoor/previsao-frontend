@@ -121,7 +121,7 @@ export function RelatorioPage() {
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md transition-shadow">
           <div className="flex items-center gap-4">
-            <div className="h-12 w-12 bg-blue-600 rounded-xl flex items-center justify-center shadow-sm">
+            <div className="h-12 w-12 bg-accent rounded-xl flex items-center justify-center shadow-sm">
               <Package className="h-6 w-6 text-white" />
             </div>
             <div>
@@ -180,7 +180,7 @@ export function RelatorioPage() {
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr className="bg-gray-800 text-white">
+              <tr className="bg-surface text-white">
                 <th className="text-left px-4 py-3 font-semibold text-sm">Código</th>
                 <th className="text-left px-4 py-3 font-semibold text-sm">Produto</th>
                 <th className="text-center px-4 py-3 font-semibold text-sm">Mínimo</th>
@@ -234,7 +234,7 @@ export function RelatorioPage() {
                       />
                     </td>
                     <td className="px-4 py-3 text-center">
-                      <Button size="sm" variant="ghost" onClick={() => abrirDetalhe(p)} className="text-blue-600 hover:text-blue-800 hover:bg-blue-50">
+                      <Button size="sm" variant="ghost" onClick={() => abrirDetalhe(p)} className="text-accent hover:text-accent-dark hover:bg-blue-50">
                         Detalhes
                       </Button>
                     </td>

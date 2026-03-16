@@ -10,9 +10,9 @@ export function AppShell({ children }: { children: ReactNode }) {
 
   if (loading) {
     return (
-      <div className="h-screen flex items-center justify-center bg-gray-50">
+      <div className="h-screen flex items-center justify-center bg-gray-100">
         <div className="flex flex-col items-center gap-4">
-          <div className="h-10 w-10 border-4 border-gray-800 border-t-transparent rounded-full animate-spin" />
+          <div className="h-10 w-10 border-4 border-accent border-t-transparent rounded-full animate-spin" />
           <p className="text-sm text-gray-500 font-medium">Carregando...</p>
         </div>
       </div>

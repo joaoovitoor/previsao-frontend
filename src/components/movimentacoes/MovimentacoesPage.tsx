@@ -229,7 +229,7 @@ export function MovimentacoesPage() {
           ) : (
             <table className="w-full text-sm">
               <thead>
-                <tr className="bg-gray-800 text-white">
+                <tr className="bg-surface text-white">
                   <th className="text-left px-4 py-3 font-semibold">Tipo</th>
                   <th className="text-left px-4 py-3 font-semibold">Produto</th>
                   <th className="text-center px-4 py-3 font-semibold">Qtd</th>

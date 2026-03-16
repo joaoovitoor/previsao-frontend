@@ -123,7 +123,7 @@ export function ProdutosPage() {
           <h1 className="text-2xl font-bold text-gray-900">Produtos</h1>
           <p className="text-sm text-gray-500 mt-1">{produtos.length} produtos cadastrados</p>
         </div>
-        <Button onClick={abrirNovo} className="gap-2 shadow-md">
+        <Button onClick={abrirNovo} className="gap-2 shadow-md bg-accent hover:bg-accent-dark">
           <Plus className="h-4 w-4" />
           Novo Produto
         </Button>
@@ -143,7 +143,7 @@ export function ProdutosPage() {
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr className="bg-gray-800 text-white">
+              <tr className="bg-surface text-white">
                 <th className="text-left px-4 py-3 font-semibold text-sm">Código</th>
                 <th className="text-left px-4 py-3 font-semibold text-sm">Nome</th>
                 <th className="text-center px-4 py-3 font-semibold text-sm">Mínimo</th>
@@ -183,7 +183,7 @@ export function ProdutosPage() {
                         <Button size="icon" variant="ghost" onClick={() => mostrarBarcode(p)} title="Código de barras" className="h-8 w-8">
                           <Barcode className="h-4 w-4" />
                         </Button>
-                        <Button size="icon" variant="ghost" onClick={() => abrirEditar(p)} title="Editar" className="h-8 w-8 text-blue-600 hover:text-blue-800 hover:bg-blue-50">
+                        <Button size="icon" variant="ghost" onClick={() => abrirEditar(p)} title="Editar" className="h-8 w-8 text-accent hover:text-accent-dark hover:bg-blue-50">
                           <Pencil className="h-4 w-4" />
                         </Button>
                         <Button size="icon" variant="ghost" onClick={() => excluir(p)} title="Excluir" className="h-8 w-8 text-red-500 hover:text-red-700 hover:bg-red-50">

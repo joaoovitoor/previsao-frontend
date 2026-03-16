@@ -8,8 +8,12 @@ import { Toaster } from '@/components/ui/toast';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'Previsão Presilhas - Controle de Estoque',
+  title: 'Previsão Presilhas - Estoque',
   description: 'Sistema de controle de estoque da Previsão Presilhas',
+  icons: {
+    icon: '/favicon.png',
+    apple: '/favicon.png',
+  },
 };
 
 export default function RootLayout({

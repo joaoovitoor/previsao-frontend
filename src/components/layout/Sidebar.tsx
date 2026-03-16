@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import {
   LayoutDashboard,
@@ -31,7 +32,7 @@ export function Sidebar() {
     <>
       <button
         onClick={() => setOpen(true)}
-        className="fixed top-4 left-4 z-50 lg:hidden p-2.5 bg-gray-800 text-white rounded-lg shadow-lg"
+        className="fixed top-4 left-4 z-50 lg:hidden p-2.5 bg-surface text-white rounded-lg shadow-lg"
       >
         <Menu className="h-5 w-5" />
       </button>
@@ -45,22 +46,20 @@ export function Sidebar() {
 
       <aside
         className={cn(
-          'fixed inset-y-0 left-0 z-50 w-64 bg-white flex flex-col transition-transform lg:translate-x-0 shadow-xl lg:shadow-md',
+          'fixed inset-y-0 left-0 z-50 w-64 bg-white flex flex-col transition-transform lg:translate-x-0 shadow-xl lg:shadow-md border-r border-gray-200',
           open ? 'translate-x-0' : '-translate-x-full',
         )}
       >
-        <div className="bg-gray-800 px-5 py-5 flex items-center gap-3">
-          <div className="h-10 w-10 bg-white/15 rounded-lg flex items-center justify-center shrink-0">
-            <Package className="h-5 w-5 text-white" />
-          </div>
-          <div className="min-w-0">
-            <h1 className="text-base font-bold text-white leading-tight truncate">
-              Previsão Presilhas
-            </h1>
-            <p className="text-[11px] text-gray-400 mt-0.5 uppercase tracking-wider">
-              Controle de Estoque
-            </p>
-          </div>
+        {/* Header com logo da empresa */}
+        <div className="bg-surface px-4 py-4 flex items-center gap-3">
+          <Image
+            src="/logo_previsao.png"
+            alt="Previsão Presilhas"
+            width={160}
+            height={50}
+            className="h-[42px] w-auto"
+            priority
+          />
           <button
             onClick={() => setOpen(false)}
             className="lg:hidden ml-auto text-gray-400 hover:text-white transition-colors"
@@ -69,7 +68,13 @@ export function Sidebar() {
           </button>
         </div>
 
-        <nav className="flex-1 p-3 space-y-0.5 mt-2">
+        <div className="px-4 py-2">
+          <p className="text-[11px] text-gray-400 uppercase tracking-wider font-semibold">
+            Controle de Estoque
+          </p>
+        </div>
+
+        <nav className="flex-1 px-3 space-y-0.5">
           {navItems
             .filter((item) => !item.adminOnly || user?.role === 'admin')
             .map((item) => {
@@ -85,11 +90,11 @@ export function Sidebar() {
                   className={cn(
                     'flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all',
                     isActive
-                      ? 'bg-gray-800 text-white shadow-md'
+                      ? 'bg-surface text-white shadow-md'
                       : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900',
                   )}
                 >
-                  <item.icon className={cn('h-5 w-5', isActive && 'text-blue-400')} />
+                  <item.icon className={cn('h-5 w-5', isActive && 'text-accent-light')} />
                   {item.label}
                 </Link>
               );
@@ -98,7 +103,7 @@ export function Sidebar() {
 
         <div className="p-3 border-t border-gray-100 bg-gray-50/50">
           <div className="flex items-center gap-3 mb-2 px-2">
-            <div className="h-9 w-9 rounded-full bg-gray-800 flex items-center justify-center shadow-sm">
+            <div className="h-9 w-9 rounded-full bg-surface flex items-center justify-center shadow-sm">
               <span className="text-sm font-semibold text-white">
                 {user?.nome?.charAt(0)?.toUpperCase()}
               </span>
@@ -110,7 +115,7 @@ export function Sidebar() {
           </div>
           <button
             onClick={logout}
-            className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-red-600 hover:bg-red-50 w-full transition-colors cursor-pointer font-medium"
+            className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-brand hover:bg-red-50 w-full transition-colors cursor-pointer font-medium"
           >
             <LogOut className="h-4 w-4" />
             Sair
