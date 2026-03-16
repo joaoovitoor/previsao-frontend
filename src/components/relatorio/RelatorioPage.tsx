@@ -33,6 +33,7 @@ export function RelatorioPage() {
       const data = await produtosService.list({
         nome: busca || undefined,
         estoqueminimo: filtroMinimo,
+        limit: 0,
       });
       data.sort((a, b) => a.codigo.toUpperCase().localeCompare(b.codigo.toUpperCase()));
       setProdutos(data);
