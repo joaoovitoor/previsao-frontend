@@ -80,7 +80,7 @@ export function RelatorioPage() {
       key: 'nome', header: 'Produto',
       render: (p) => (
         <Link
-          href={`/movimentacoes?produto=${p.id}`}
+          href={`/produtos?produto=${p.id}`}
           className="font-medium text-accent hover:text-accent-dark hover:underline"
         >
           {p.nome}

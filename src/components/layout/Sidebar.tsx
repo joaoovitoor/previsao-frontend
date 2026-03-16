@@ -6,7 +6,6 @@ import { usePathname, useRouter } from 'next/navigation';
 import {
   LayoutDashboard,
   Package,
-  ArrowLeftRight,
   Users,
   LogOut,
   Menu,
@@ -23,14 +22,12 @@ import { useState, useRef, useEffect } from 'react';
 const navItems = [
   { href: '/', label: 'Relatório Estoque', icon: LayoutDashboard },
   { href: '/produtos', label: 'Produtos', icon: Package },
-  { href: '/movimentacoes', label: 'Movimentações', icon: ArrowLeftRight },
   { href: '/usuarios', label: 'Usuários', icon: Users, adminOnly: true },
 ];
 
 const pageTitles: Record<string, string> = {
   '/': 'Relatório Estoque',
   '/produtos': 'Produtos',
-  '/movimentacoes': 'Movimentações',
   '/usuarios': 'Usuários',
   '/minha-conta': 'Minha Conta',
   '/minha-conta/senha': 'Alterar Senha',
