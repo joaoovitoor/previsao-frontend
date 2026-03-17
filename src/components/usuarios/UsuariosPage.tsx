@@ -54,15 +54,18 @@ export function UsuariosPage() {
     carregar();
   }, [carregar]);
 
+  const normalize = (str: string) =>
+    str.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+
   const usuariosFiltrados = useMemo(() => {
     let filtered = [...usuarios];
 
     if (busca) {
-      const search = busca.toLowerCase();
+      const search = normalize(busca);
       filtered = filtered.filter(
         (u) =>
-          u.nome?.toLowerCase().includes(search) ||
-          u.email?.toLowerCase().includes(search) ||
+          normalize(u.nome || '').includes(search) ||
+          normalize(u.email || '').includes(search) ||
           u.cpf?.includes(search.replace(/\D/g, '')),
       );
     }
