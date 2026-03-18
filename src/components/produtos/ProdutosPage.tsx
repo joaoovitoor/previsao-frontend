@@ -74,7 +74,7 @@ export function ProdutosPage() {
       return;
     }
     try {
-      const data = await produtosService.list({ nome: buscaProduto, limit: 10 });
+      const data = await produtosService.list({ nome: buscaProduto, limit: 50 });
       setProdutosBusca(data);
       setShowDropdown(true);
     } catch { /* ignore */ }
