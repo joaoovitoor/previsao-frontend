@@ -35,7 +35,7 @@ async function request<T>(
     headers,
   });
 
-  if (res.status === 401) {
+  if (res.status === 401 && token) {
     if (typeof window !== 'undefined') {
       localStorage.removeItem('token');
       localStorage.removeItem('user');
